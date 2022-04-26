@@ -1,0 +1,121 @@
+CREATE TABLE p2_member -- 사용자정보
+(
+	USER_SEQ BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
+	,USER_ID VARCHAR(20) NOT NULL UNIQUE
+	,USER_PASSWORD VARCHAR(255) NOT NULL
+	,USER_NAME VARCHAR(100) NOT NULL
+	,USER_IMAGE1 VARCHAR(400)
+	,USER_IMAGE2 VARCHAR(400)
+	,USER_ADDRESS1 VARCHAR(255) NOT NULL
+	,USER_ADDRESS2 VARCHAR(255) NOT NULL
+	,USER_MAIL VARCHAR(50) NOT NULL
+	,USER_PHONE VARCHAR(30) NOT NULL
+	,USER_WDATE DATETIME
+	,USER_ACTIVE CHAR(1)
+	,USER_LEVEL CHAR(1)
+    	,USER_BUSINESS VARCHAR(255)
+	,USER_BIRTH VARCHAR(45)
+	,USER_PENDING CHAR(1)
+);
+
+CREATE TABLE `like` ( -- 좋아요
+  `like_seq` bigint NOT NULL AUTO_INCREMENT,
+  `mboard_seq` bigint NOT NULL,
+  `user_seq` bigint DEFAULT NULL,
+  `emoji` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`like_seq`)
+);
+
+CREATE TABLE `mainboard` ( -- 메인보드
+  `MBOARD_SEQ` bigint NOT NULL AUTO_INCREMENT,
+  `USER_SEQ` bigint NOT NULL,
+  `CONTENTS` longtext NOT NULL,
+  `CONTENTS_URL` varchar(255) DEFAULT NULL,
+  `VIEW_YN` char(1) NOT NULL,
+  `HASHTAG` varchar(255) DEFAULT NULL,
+  `POSTING_TYPE` char(1) DEFAULT NULL,
+  `WDATE` datetime NOT NULL,
+  `DEL_YN` char(1) NOT NULL,
+  `lIKE_SEQ` bigint NOT NULL,
+  `EMOJI_COUNT` char(10) DEFAULT NULL,
+  PRIMARY KEY (`MBOARD_SEQ`)
+);
+
+CREATE TABLE `jobposting` ( -- 구인글
+  `jobposting_seq` bigint NOT NULL AUTO_INCREMENT,
+  `mboard_seq` bigint NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `company_name` varchar(100) NOT NULL,
+  `work_area` varchar(255) NOT NULL,
+  `work_field` varchar(255) NOT NULL,
+  `work_condition` varchar(255) NOT NULL,
+  PRIMARY KEY (`jobposting_seq`)
+); 
+
+CREATE TABLE `reply` ( -- 댓글
+  `reply_seq` bigint NOT NULL AUTO_INCREMENT,
+  `mboard_seq` bigint NOT NULL,
+  `user_seq` bigint NOT NULL,
+  `reply` longtext NOT NULL,
+  `rdate` datetime NOT NULL,
+  PRIMARY KEY (`reply_seq`)
+);
+
+CREATE TABLE `com_profile` ( -- 회사프로필
+  `seq` bigint NOT NULL AUTO_INCREMENT,
+  `srt` varchar(10000) DEFAULT NULL,
+  `size` varchar(1000) DEFAULT NULL,
+  `day` varchar(20) DEFAULT NULL,
+  `people` int DEFAULT NULL,
+  `intro` longtext,
+  `date` datetime DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `user_seq` bigint DEFAULT NULL,
+  PRIMARY KEY (`seq`),
+  KEY `user_seq_idx` (`user_seq`),
+  CONSTRAINT `user_seq` FOREIGN KEY (`user_seq`) REFERENCES `p2_member` (`USER_SEQ`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `cand` ( -- 지원자 정보
+  `cand_seq` bigint DEFAULT NULL,
+  `jobposting_seq` bigint DEFAULT NULL,
+  `user_seq` bigint DEFAULT NULL,
+  `cand_date` datetime DEFAULT NULL,
+  `com_seq` bigint DEFAULT NULL,
+  `cand_confirm` char(1) DEFAULT NULL,
+  KEY `jobpost_idx` (`jobposting_seq`),
+  KEY `user_idx` (`user_seq`),
+  KEY `com_idx` (`com_seq`),
+  CONSTRAINT `com` FOREIGN KEY (`com_seq`) REFERENCES `p2_member` (`USER_SEQ`),
+  CONSTRAINT `jobpost` FOREIGN KEY (`jobposting_seq`) REFERENCES `jobposting` (`jobposting_seq`),
+  CONSTRAINT `user` FOREIGN KEY (`user_seq`) REFERENCES `p2_member` (`USER_SEQ`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `follow` ( -- 팔로워 
+  `follow_seq` bigint NOT NULL AUTO_INCREMENT,
+  `follow_follower` varchar(40) NOT NULL,
+  `follow_followee` varchar(40) DEFAULT NULL,
+  `follow_regdate` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`follow_seq`)
+) ;
+
+CREATE TABLE `profile_people` (
+  `PROFILE_SEQ` bigint NOT NULL AUTO_INCREMENT,
+  `USER_SEQ` bigint DEFAULT NULL,
+  `PROFILE_SHORT` varchar(400) DEFAULT NULL,
+  `PROFILE_DEGREE1` varchar(100) DEFAULT NULL,
+  `PROFILE_DEGREE2` varchar(100) DEFAULT NULL,
+  `PROFILE_CAREER` varchar(400) DEFAULT NULL,
+  `PROFILE_CERTIFICATE` varchar(400) DEFAULT NULL,
+  `PROFILE_SKILL` varchar(400) DEFAULT NULL,
+  `PROFILE_FILENAME1` varchar(400) DEFAULT NULL,
+  `PROFILE_FILENAME2` varchar(400) DEFAULT NULL,
+  `PROFILE_FILENAME3` varchar(400) DEFAULT NULL,
+  `PROFILE_INTRODUCTION` longtext,
+  PRIMARY KEY (`PROFILE_SEQ`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+
+
+
+use mydb;
